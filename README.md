@@ -5,8 +5,7 @@ Portal interface implemented in Django Framework to use and administer Custos Se
 
 #### Run instructions
 
-1. Create a python virtual env for custos portal 
-   Activate the virtual environment 
+1. Create a python virtual env for custos portal and activate the virtual environment 
 ```
 python -m venv venv
 source venv/bin/activate
