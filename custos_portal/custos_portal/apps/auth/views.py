@@ -347,7 +347,7 @@ def verify_email(request, code):
             login_url += "?" + urlencode({'next': email_verification.next})
 
         print(user_management_client.is_user_enabled(settings.CUSTOS_TOKEN, "shivam_testing_3"))
-        if user_management_client.is_user_enabled(settings.CUSTOS_TOKEN, username).is_exist:
+        if user_management_client.is_user_enabled(settings.CUSTOS_TOKEN, username).status:
             logger.debug("User {} is already enabled".format(username))
             messages.success(
                 request,
