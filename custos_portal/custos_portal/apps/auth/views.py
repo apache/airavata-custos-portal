@@ -18,6 +18,7 @@ from django.utils.http import urlencode
 from django.views.decorators.debug import sensitive_variables
 from google.protobuf.json_format import MessageToDict
 from requests_oauthlib import OAuth2Session
+from google.auth import jwt
 
 from . import utils
 from . import models
@@ -174,7 +175,11 @@ def handle_login(request):
     try:
         if user is not None:
             login(request, user)
-            return _handle_login_redirect(request)
+            response = identity_management_client.authenticate(settings.CUSTOS_TOKEN, username, password)
+            token = MessageToDict(response)["accessToken"]
+            response = _handle_login_redirect(request)
+            response.set_cookie('token', token)
+            return response
         else:
             messages.error(request, "Login failed. Please try again.")
     except Exception as err:
@@ -195,7 +200,7 @@ def redirect_login(request, idp_alias):
 
     auth_base_url = identity_management_client.get_oidc_configuration(settings.CUSTOS_TOKEN, client_id)
     # auth_base_url = json.loads(auth_base_url.)
-    # print(auth_base_url)
+    print(auth_base_url)
     base_authorize_url = settings.KEYCLOAK_AUTHORIZE_URL
 
     redirect_uri = request.build_absolute_uri(
@@ -318,7 +323,9 @@ def start_login(request):
 def start_logout(request):
     logout(request)
     redirect_url = request.build_absolute_uri(resolve_url(settings.LOGOUT_REDIRECT_URL))
-    return redirect(settings.KEYCLOAK_LOGOUT_URL + "?redirect_uri=" + quote(redirect_url))
+    response = redirect(settings.KEYCLOAK_LOGOUT_URL + "?redirect_uri=" + quote(redirect_url))
+    response.delete_cookie('token')
+    return response
 
 
 def start_username_password_login(request):
@@ -347,7 +354,7 @@ def verify_email(request, code):
             login_url += "?" + urlencode({'next': email_verification.next})
 
         print(user_management_client.is_user_enabled(settings.CUSTOS_TOKEN, "shivam_testing_3"))
-        if user_management_client.is_user_enabled(settings.CUSTOS_TOKEN, username).is_exist:
+        if user_management_client.is_user_enabled(settings.CUSTOS_TOKEN, username).status:
             logger.debug("User {} is already enabled".format(username))
             messages.success(
                 request,

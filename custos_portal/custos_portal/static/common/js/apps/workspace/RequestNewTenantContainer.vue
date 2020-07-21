@@ -6,7 +6,7 @@
             </div>
         </div>
         <div>
-            <b-form @submit="onSubmit" method="post">
+            <b-form @submit="onSubmit" >
                 <b-card no-body>
                     <b-tabs card  v-model="tabIndex">
                         <b-tab :title-link-class="linkClass(0)" class="w-75" title="User Info">
@@ -163,6 +163,40 @@
                                     numbers, and must at least one special character.
                                 </b-form-text>
                             </b-form-group>
+                            <b-form-group
+                                :invalid-feedback="invalidFeedback"
+                                :valid-feedback="validFeedback"
+                                description=""
+                                id="fieldset-1"
+                                label="Parent ID"
+                                label-for="client-id"
+                            >
+                                <b-form-input
+                                    :state="!$v.form.parentID.$invalid"
+                                    id="parent-id"
+                                    name="parent-id"
+                                    trim
+                                    v-model="form.parentID"
+                                >
+                            </b-form-input>
+                            </b-form-group>
+                            <b-form-group
+                                :invalid-feedback="invalidFeedback"
+                                :valid-feedback="validFeedback"
+                                description=""
+                                id="fieldset-1"
+                                label="Parent Secret"
+                                label-for="parent-secret"
+                            >
+                                <b-form-input
+                                    :state="!$v.form.parentSecret.$invalid"
+                                    id="parent-secret"
+                                    name="parent-secret"
+                                    trim
+                                    v-model="form.parentSecret"
+                                >
+                            </b-form-input>
+                            </b-form-group>
                         </b-tab>
 
                         <b-tab :title-link-class="linkClass(2)" class="w-75" title="Gateway details">
@@ -183,8 +217,6 @@
                                         v-model="form.client_name">
                                 </b-form-input>
                             </b-form-group>
-
-
                             <div v-for="(redirect_uri, index) in form.redirect_uris">
                                 <b-form-row class="align-items-center">
                                     <b-col>
@@ -297,8 +329,48 @@
                                 ></b-form-radio-group>
                             </b-form-group>
                             <b-button :disabled="isSubmitDisabled" type="submit" v-b-modal.modal-1 variant="primary">
-                                Submit
+                                Request Tenant
                             </b-button>
+                        </b-tab>
+                        <b-tab :title-link-class="linkClass(3)" class="w-75" title="Client Details">
+                            <div v-if="this.clientID === ''">
+                                <div class="row">
+                                    <div class="col">
+                                        <h1 class="h4 mb-4">Please create a new tenant to view ClientID and Client Secret</h1>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-else>
+                                <div class="row">
+                                    <div class="col">
+                                        <h1 class="h4 mb-4">Tenant Request Details</h1>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="card border-default">
+                                            <div class="card-body">
+                                                <table class="table">
+                                                    <tbody>
+                                                    <tr>
+                                                        <th scope="row">Client ID</th>
+                                                        <td>
+                                                            <div> {{this.clientID}}</div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th scope="row">Client Secret</th>
+                                                        <td>
+                                                            <div> {{this.clientSecret}}</div>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </b-tab>
                     </b-tabs>
                 </b-card>
@@ -306,10 +378,9 @@
             <div class="text-center">
                 <b-button-group class="mt-2">
                     <b-button v-if="tabIndex > 0" @click="tabIndex--">Previous</b-button>
-
                     <b-button v-if="tabIndex < 2" @click="tabIndex++">Next</b-button>
                 </b-button-group>
-                <div class="text-muted">Current Tab: {{ tabIndex+1 }} of 3</div>
+                <div class="text-muted">Current Tab: {{ tabIndex+1 }} of 4</div>
             </div>
         </div>
     </div>
@@ -317,6 +388,7 @@
 
 <script>
     import {email, required, url, minLength} from "vuelidate/lib/validators";
+    import axios from "axios";
 
     export default {
         computed: {
@@ -352,7 +424,9 @@
                     client_uri: "",
                     logo_uri: "",
                     application_type: "",
-                    comment: ""
+                    comment: "",
+                    parentID: "",
+                    parentSecret: ""
                 },
                 scopeOptions: [
                     {text: "openId", value: "openid", disabled: "true"},
@@ -361,8 +435,10 @@
                     {text: "org.cilogon.userinfo", value: "org.cilogon.userinfo"},
                 ],
                 application_typeOptions: [
-                    {text: "web", value: "web"}
-                ]
+                    {text: "web", value: "web"},
+                ],
+                clientID: '',
+                clientSecret: ''
             }
         },
         validations: {
@@ -403,7 +479,9 @@
                         required, url
                     }
                 },
-                comment: {required, minLength: minLength(15)}
+                comment: {required, minLength: minLength(15)},
+                parentID: {},
+                parentSecret: {}
             }
         },
         methods: {
@@ -415,16 +493,110 @@
                 }
             },
             onSubmit(event) {
-                if (this.$v.form.invalid) {
-                    console.log("Please fix the errors");
-                    event.preventDefault();
-                    event.preventDefault();
+                event.preventDefault();
+
+                if(!this.$v.form.$invalid)
+                {
+                    let requester_email = this.$v.form.requester_email.$model;
+                    let contact = this.$v.form.primary_contact.$model;
+                    let secondary_contact = this.$v.form.secondary_contact.$model;
+                    let admin_username = this.$v.form.admin_username.$model;
+                    let admin_first_name = this.$v.form.admin_first_name.$model;
+                    let admin_last_name = this.$v.form.admin_last_name.$model;
+                    let admin_email = this.$v.form.admin_email.$model;
+                    let admin_password = this.$v.form.admin_password.$model;
+                    let client_name = this.$v.form.client_name.$model;
+                    let redirect_uris = this.$v.form.redirect_uris.$model;
+                    let scope = this.$v.form.scope.$model;
+                    let domain = this.$v.form.domain.$model;
+                    let client_uri = this.$v.form.client_uri.$model;
+                    let logo_uri = this.$v.form.logo_uri.$model;
+                    let comment = this.$v.form.comment.$model;
+                    let application_type = this.$v.form.application_type.$model;
+                    
+                    let scopeString = '';
+                    for(var i=0; i<scope.length; i++)
+                    {
+                        scopeString += scope[i]
+                    }
+
+                    let contacts = [];
+                    contacts.push(contact);
+                    if(secondary_contact)
+                        contacts.push(secondary_contact);
+
+                    //Request a new child tenanat
+                    if(this.$v.form.parentID.$model !== '' && this.$v.form.parentSecret.$model !== '')
+                    {
+                        let encodedString = btoa(this.$v.form.parentID.$model+":"+this.$v.form.parentSecret.$model)
+
+                        axios.post('https://custos.scigap.org/apiserver/tenant-management/v1.0.0/oauth2/tenant', 
+                        {
+                            "client_name": client_name,
+                            "requester_email": requester_email,
+                            "admin_username": admin_username,
+                            "admin_first_name": admin_first_name,
+                            "admin_last_name": admin_last_name,
+                            "admin_email": admin_email,
+                            "contacts": contacts,
+                            "redirect_uris": redirect_uris,
+                            "scope": scopeString,
+                            "domain": domain,
+                            "admin_password": admin_password,
+                            "client_uri": client_uri,
+                            "logo_uri": logo_uri,
+                            "application_type": application_type,
+                            "comment": comment
+                        }, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${encodedString}`
+                            }
+                        })
+                        .then(response => {
+                            const { client_id, client_secret } = response.data;
+                            this.clientID = client_id;
+                            this.clientSecret = client_secret;
+                            this.tabIndex += 1;
+                        });
+                    }
+                    //Request a new parent tenant
+                    else{
+                        axios.post('https://custos.scigap.org/apiserver/tenant-management/v1.0.0/oauth2/tenant', 
+                        {
+                            "client_name": client_name,
+                            "requester_email": requester_email,
+                            "admin_username": admin_username,
+                            "admin_first_name": admin_first_name,
+                            "admin_last_name": admin_last_name,
+                            "admin_email": admin_email,
+                            "contacts": contacts,
+                            "redirect_uris": redirect_uris,
+                            "scope": scopeString,
+                            "domain": domain,
+                            "admin_password": admin_password,
+                            "client_uri": client_uri,
+                            "logo_uri": logo_uri,
+                            "application_type": application_type,
+                            "comment": comment
+                        }, {
+                            headers: {
+                                'Content-Type': 'application/json',
+                            }
+                        })
+                        .then(response => {
+                            const { client_id, client_secret } = response.data;
+                            this.clientID = client_id;
+                            this.clientSecret = client_secret;
+                            this.tabIndex += 1;
+                        });
+                    }
+                    
                 }
             },
             addRedirectUri: function () {
                 this.form.redirect_uris.push("");
             },
-            // TODO check whether 1 redirect URI is there
             deleteRedirectUri: function (index) {
                 if ( index > 0 ) {
                     this.form.redirect_uris.splice(index, 1);

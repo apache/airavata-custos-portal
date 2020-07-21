@@ -9,33 +9,97 @@
             <div class="col">
                 <div class="card">
                     <div class="card-body">
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>Request Id</th>
-                                <th>Client Name</th>
-                                <th>Creation Time</th>
-                                <th>Status</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr
-                                    v-for="tR in tenantRequests"
-                                    :key="tR.requestId"
-                            >
-                                <td>
-                                    <b-link @click="viewLink(tR)">{{tR.requestId}}</b-link>
-                                </td>
-                                <td>{{tR.clientName}}</td>
-                                <td>
-                                    <span>{{ tR.creationTime }}</span>
-                                </td>
-                                <td>
-                                    {{tR.status}}
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                            <b-tabs card>
+                                <b-tab class="w-75" title="Requested">
+                                    <table class="table table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th>Request Id</th>
+                                            <th>Client Name</th>
+                                            <th>Creation Time</th>
+                                            <th>Status</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr
+                                                v-for="tR in requested"
+                                                :key="tR.requestId"
+                                        >
+                                            <td>
+                                                <b-link @click="viewLink(tR)">{{tR.tenant_id}}</b-link>
+                                            </td>
+                                            <td>{{tR.client_name}}</td>
+                                            <td>
+                                                <span>{{ tR.creationTime }}</span>
+                                            </td>
+                                            <td>
+                                                {{tR.tenant_status}}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </b-tab>
+                                <b-tab class="w-75" title="Active">
+                                    <table class="table table-hover">
+                            
+                                        <thead>
+                                        <tr>
+                                            <th>Request Id</th>
+                                            <th>Client Name</th>
+                                            <th>Creation Time</th>
+                                            <th>Status</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr
+                                                v-for="tR in active"
+                                                :key="tR.requestId"
+                                        >
+                                            <td>
+                                                <b-link @click="viewLink(tR)">{{tR.tenant_id}}</b-link>
+                                            </td>
+                                            <td>{{tR.client_name}}</td>
+                                            <td>
+                                                <span>{{ tR.creationTime }}</span>
+                                            </td>
+                                            <td>
+                                                {{tR.tenant_status}}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </b-tab>
+                                <b-tab class="w-75" title="Deactivated">
+                                    <table class="table table-hover">
+                            
+                                        <thead>
+                                        <tr>
+                                            <th>Request Id</th>
+                                            <th>Client Name</th>
+                                            <th>Creation Time</th>
+                                            <th>Status</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr
+                                                v-for="tR in deactivated"
+                                                :key="tR.requestId"
+                                        >
+                                            <td>
+                                                <b-link @click="viewLink(tR)">{{tR.tenant_id}}</b-link>
+                                            </td>
+                                            <td>{{tR.client_name}}</td>
+                                            <td>
+                                                <span>{{ tR.creationTime }}</span>
+                                            </td>
+                                            <td>
+                                                {{tR.tenant_status}}
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </b-tab>
+                        </b-tabs>
                     </div>
                 </div>
             </div>
@@ -48,31 +112,59 @@
 
     import {now} from "moment";
     import urls from "./utils/urls";
+    import axios from 'axios';
+    import {CLIENT_ID, CLIENT_SECRET} from '../config/config';
+    import VueJwtDecode from 'vue-jwt-decode'
 
     export default {
 
         data() {
             return {
-                tenantRequests: []
+                requested: [],
+                active: [],
+                deactivated: []
             }
         },
         beforeMount() {
-            this.tenantRequests.push({
-                requestId: '234234324',
-                clientName: 'scigap',
-                creationTime: now(),
-                status: 'Active'
-            });
-            this.tenantRequests.push({
-                requestId: '54645645',
-                clientName: 'scigap',
-                creationTime: now(),
-                status: 'Active'
+            let encodedString = btoa(CLIENT_ID+":"+CLIENT_SECRET);
+
+            let cookie = document.cookie.split(";")
+            let token = '';
+            for(var i=0; i<cookie.length; i++)
+            {
+                let result = cookie[i].split("=")
+                if(result[0] === 'token')
+                    token = result[1]
+            }
+
+            let decodedEmail = VueJwtDecode.decode(token).email;
+
+            axios.get(`https://custos.scigap.org/apiserver/tenant-management/v1.0.0/tenants?offset=0&status=ACTIVE&requester_email=${decodedEmail}`, {
+                headers: {
+                    'Authorization': `Bearer ${encodedString}`
+                }
+            })
+            .then(response => {
+                const {tenant} = response.data;
+
+                this.active = tenant.filter(t => {
+                    if(t.tenant_status === 'ACTIVE')
+                        return true;
+                })
+
+                this.requested = tenant.filter(t => {
+                    if(t.tenant_status === 'REQUESTED')
+                        return true;
+                })
+
+                this.deactivated = tenant.filter(t => {
+                    if(t.tenant_status === 'DEACTIVATED')
+                        return true;
+                })
             })
         },
         methods: {
             viewLink(tenantRequest) {
-                console.log("Executed view link",tenantRequest)
                 return urls.navigateToViewRequest(tenantRequest)
             }
         }
