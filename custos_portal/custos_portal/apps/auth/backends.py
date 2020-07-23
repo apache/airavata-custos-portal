@@ -22,6 +22,7 @@ class CustosAuthBackend(ModelBackend):
     def authenticate(self, request=None, username=None, password=None, refresh_token=None):
         try:
             if username and password:
+                print("Entered username and password")
                 token = self._get_token_and_userinfo_password_flow(username, password)
                 request.session["ACCESS_TOKEN"] = token
                 userinfo = self._get_userinfo_from_token(token)

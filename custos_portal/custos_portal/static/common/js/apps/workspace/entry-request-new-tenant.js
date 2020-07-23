@@ -19,7 +19,7 @@ entry(Vue => {
       };
     },
     beforeMount() {
-      console.log("Entry is executed")
+      console.log("Entry is executed");
     }
   }).$mount("#request-new-tenant");
 });

@@ -219,9 +219,9 @@ class CreateAccountForm(forms.Form):
         username = cleaned_data.get('username')
 
         check_username = user_management_client.is_username_available(settings.CUSTOS_TOKEN, username)
-        print(check_username.is_exist)
+        print(check_username)
         try:
-            if user_management_client.is_username_available(settings.CUSTOS_TOKEN, username).is_exist:
+            if user_management_client.is_username_available(settings.CUSTOS_TOKEN, username).status:
                 logger.info("Username is available");
             else:
                 logger.info("Username is not available");

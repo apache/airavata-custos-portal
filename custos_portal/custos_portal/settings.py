@@ -23,6 +23,10 @@ SECRET_KEY = '3=(o1!l-)1p#evd@aviv56^piimx)!p=^t=#5))yn547yr9f2&'
 
 # Custos server secret key
 CUSTOS_TOKEN = 'Y3VzdG9zLTZud29xb2RzdHBlNW12Y3EwOWxoLTEwMDAwMTAxOkdpS3JHR1ZMVzd6RG9QWnd6Z0NpRk03V1V6M1BoSXVtVG1GeEFrcjc='
+                
+#Client ID and Client Secret
+CLIENT_ID = 'custos-6nwoqodstpe5mvcq09lh-10000101'
+CLIENT_SECRET = 'GiKrGGVLW7zDoPZwzgCiFM7WUz3PhIumTmFxAkr7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
