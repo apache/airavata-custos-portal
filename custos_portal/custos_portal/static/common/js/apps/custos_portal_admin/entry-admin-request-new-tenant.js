@@ -30,7 +30,6 @@ entry(Vue => {
       
       this.decodedEmail = VueJwtDecode.decode(token).email;
       console.log(this.decodedEmail);
-      console.log("Entry is executed");
     }
-  }).$mount("#request-new-tenant");
+  }).$mount("#admin-request-new-tenant");
 });

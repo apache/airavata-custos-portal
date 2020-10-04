@@ -48,7 +48,7 @@ body {
 }
 
 .c-nav {
-    background-color: #444;
+    background-color: #b4b3b3;
     min-width: 70px;
     min-height: 60px;
     padding: 1rem 0;
@@ -56,7 +56,7 @@ body {
     display: flex;
 
     &__item {
-        color: #ccc;
+        color: #eeeeee;
         font-size: 1.5rem;
         display: block;
         text-align: center;
@@ -65,15 +65,15 @@ body {
 
         &:hover,
         &:focus {
-            color: #ffffff;
+            color: #444444;
         }
 
         &:active {
-            color: #bbb;
+            color: #444444;
         }
 
         &.is-active {
-            color: #ffffff;
+            color: #444444;
         }
     }
 }

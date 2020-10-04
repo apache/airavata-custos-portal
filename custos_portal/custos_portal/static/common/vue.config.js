@@ -11,7 +11,8 @@ module.exports = {
     'view-request': "./js/apps/workspace/entry-view-tenant-request",
     'admin-view-request': "./js/apps/custos_portal_admin/entry-admin-view-tenant-request",
     'admin-edit-request': "./js/apps/custos_portal_admin/entry-admin-edit-tenant-request",
-    'admin-list-requests': "./js/apps/custos_portal_admin/entry-admin-list-new-tenant-requests"
+    'admin-list-requests': "./js/apps/custos_portal_admin/entry-admin-list-new-tenant-requests",
+    'admin-request-new-tenant': "./js/apps/custos_portal_admin/entry-admin-request-new-tenant"
   },
   css: {
     loaderOptions: {

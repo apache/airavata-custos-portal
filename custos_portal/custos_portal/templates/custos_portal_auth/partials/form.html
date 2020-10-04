@@ -1,3 +1,19 @@
+<style>
+  .btn {
+    color: white;
+    background-color: #EA6A0A;
+    padding: 10px 25px;
+    border: 1px solid #EA6A0A;
+    border-radius: 8px;
+}
+.btn:hover {
+  color: white;
+    background-color: #ee893d;
+    padding: 10px 25px;
+    border: 1px solid #ee893d;
+    border-radius: 8px;
+}
+</style>
 
 <form action="{{ url }}" method="post">
   {% include "./non_field_errors.html" %}
@@ -7,7 +23,7 @@
   {% include './form_field.html' %}
   {% endfor %}
 
-  <button type="submit" class="btn btn-primary btn-block">
+  <button type="submit" class="btn">
     {{ submit_text }}
   </button>
 </form>

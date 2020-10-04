@@ -1,13 +1,22 @@
 import logging
 
-from clients.user_management_client import UserManagementClient
-from custos.core import IamAdminService_pb2
+from custos.clients.user_management_client import UserManagementClient
+from custos.transport.settings import CustosServerClientSettings
+from custos.server.core import IamAdminService_pb2
 from django import forms
 from django.conf import settings
 from django.core import validators
+import os
 
 logger = logging.getLogger(__name__)
-user_management_client = UserManagementClient()
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+settings = os.path.join(BASE_DIR, 'transport', 'settings.ini')
+custos_settings = CustosServerClientSettings(custos_host='custos.scigap.org',
+                                             custos_port='31499',
+                                             custos_client_id='custos-6nwoqodstpe5mvcq09lh-10000101',
+                                             custos_client_sec='GiKrGGVLW7zDoPZwzgCiFM7WUz3PhIumTmFxAkr7',
+                                             configuration_file_location=None)
+user_management_client = UserManagementClient(custos_settings)
 
 USERNAME_VALIDATOR = validators.RegexValidator(
     regex=r"^[a-z0-9_-]+$",
@@ -219,9 +228,9 @@ class CreateAccountForm(forms.Form):
         username = cleaned_data.get('username')
 
         check_username = user_management_client.is_username_available(settings.CUSTOS_TOKEN, username)
-        print(check_username.is_exist)
+        print(check_username)
         try:
-            if user_management_client.is_username_available(settings.CUSTOS_TOKEN, username).is_exist:
+            if user_management_client.is_username_available(settings.CUSTOS_TOKEN, username).status:
                 logger.info("Username is available");
             else:
                 logger.info("Username is not available");

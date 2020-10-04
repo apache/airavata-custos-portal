@@ -10,16 +10,22 @@ entry(Vue => {
   new Vue({
     render(h) {
       return h(MainLayout, [
-        h(ListTenantRequestsContainer)
+        h(ListTenantRequestsContainer, {
+          props: {
+            tokenData: this.token
+          }
+        })
       ]);
     },
     data() {
       return {
-        experimentId: null
+        experimentId: null,
+        token: null
       };
     },
     beforeMount() {
-      console.log("Entry for list-new-tenant-request is executed")
+      console.log("Entry for list-new-tenant-request is executed");
+      this.token = this.$el.dataset.token;
     }
   }).$mount("#list-requests");
 });

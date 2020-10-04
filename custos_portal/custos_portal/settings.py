@@ -23,6 +23,7 @@ SECRET_KEY = '3=(o1!l-)1p#evd@aviv56^piimx)!p=^t=#5))yn547yr9f2&'
 
 # Custos server secret key
 CUSTOS_TOKEN = 'Y3VzdG9zLTZud29xb2RzdHBlNW12Y3EwOWxoLTEwMDAwMTAxOkdpS3JHR1ZMVzd6RG9QWnd6Z0NpRk03V1V6M1BoSXVtVG1GeEFrcjc='
+                
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -125,6 +126,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "custos_portal", "static")]
 
+
 LOGIN_URL = 'custos_portal_auth:login'
 LOGIN_REDIRECT_URL = 'custos_portal_auth:dashboard'
 LOGOUT_REDIRECT_URL = '/'
@@ -209,3 +211,5 @@ try:
     from custos_portal.settings_local import *  # noqa
 except ImportError:
     pass
+
+

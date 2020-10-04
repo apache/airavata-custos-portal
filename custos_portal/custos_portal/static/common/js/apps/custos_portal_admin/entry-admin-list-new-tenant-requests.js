@@ -10,16 +10,22 @@ entry(Vue => {
   new Vue({
     render(h) {
       return h(MainLayout, [
-        h(ListTenantRequestsContainer)
+        h(ListTenantRequestsContainer, {
+          props: {
+            tokenData: this.tokenData
+          }
+        })
       ]);
     },
     data() {
       return {
-        experimentId: null
+        experimentId: null,
+        tokenData: null
       };
     },
     beforeMount() {
       console.log("Entry for list-admin-new-tenant-request is executed")
+      this.tokenData = this.$el.dataset.token;
     }
   }).$mount("#admin-list-requests");
 });

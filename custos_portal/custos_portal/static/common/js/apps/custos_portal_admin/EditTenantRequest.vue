@@ -2,10 +2,10 @@
     <div>
         <div class="row">
             <div class="col">
-                <h1 class="h4 mb-4">Update Tenant Request Form</h1>
+                <h1 class="h4 mb-4 heading">Update Tenant Request Form</h1>
             </div>
         </div>
-        <div>
+        <div class="card">
             <b-form @submit="onSubmit">
                 <b-form-group
                         id="fieldset-1"
@@ -14,11 +14,11 @@
                         label-for="input-1"
                         :invalid-feedback="invalidFeedback"
                         :valid-feedback="validFeedback"
+                        class="inputLabels"
                 >
                     <b-form-input
                             id="input-1"
                             v-model="form.client_name"
-                            :state="!$v.form.client_name.$invalid"
                             trim>
                     </b-form-input>
                 </b-form-group>
@@ -29,6 +29,7 @@
                         label-for="input-1"
                         :invalid-feedback="invalidFeedback"
                         :valid-feedback="validFeedback"
+                        class="inputLabels"
                 >
                     <b-form-input
                             id="input-1"
@@ -45,6 +46,7 @@
                         label-for="input-1"
                         :invalid-feedback="invalidFeedback"
                         :valid-feedback="validFeedback"
+                        class="inputLabels"
                 >
                     <b-form-input
                             id="input-1"
@@ -62,6 +64,7 @@
                                 label-for="input-1"
                                 :invalid-feedback="invalidFeedback"
                                 :valid-feedback="validFeedback"
+                                class="inputLabels"
                         >
                             <b-form-input
                                     id="input-1"
@@ -79,6 +82,7 @@
                                 label-for="input-1"
                                 :invalid-feedback="invalidFeedback"
                                 :valid-feedback="validFeedback"
+                                class="inputLabels"
                         >
                             <b-form-input
                                     id="input-1"
@@ -97,6 +101,7 @@
                         label-for="input-1"
                         :invalid-feedback="invalidFeedback"
                         :valid-feedback="validFeedback"
+                        class="inputLabels"
                 >
                     <b-form-input
                             id="input-1"
@@ -113,6 +118,7 @@
                         label-for="input-1"
                         :invalid-feedback="invalidFeedback"
                         :valid-feedback="validFeedback"
+                        class="inputLabels"
                 >
                     <b-input type="password"
                              id="text-password"
@@ -125,17 +131,16 @@
                         at least one special character.
                     </b-form-text>
                 </b-form-group>
-
-
                 <b-form-row>
                     <b-col>
                         <b-form-group
                                 id="fieldset-1"
                                 description=""
-                                label="Primary contact"
+                                label="Primary Contact"
                                 label-for="input-1"
                                 :invalid-feedback="invalidFeedback"
                                 :valid-feedback="validFeedback"
+                                class="inputLabels"
                         >
                             <b-form-input
                                     id="input-1"
@@ -153,6 +158,7 @@
                                 label-for="input-1"
                                 :invalid-feedback="invalidFeedback"
                                 :valid-feedback="validFeedback"
+                                class="inputLabels"
                         >
                             <b-form-input
                                     id="input-1"
@@ -163,7 +169,7 @@
                         </b-form-group>
                     </b-col>
                 </b-form-row>
-                <div v-for="(redirect_uri, index) in form.redirect_uris">
+                <div v-for="(redirect_uri, index) in this.tenantRequest.redirect_uris" :key="index">
                     <b-form-row class="align-items-center">
                         <b-col>
                             <b-form-group
@@ -173,6 +179,7 @@
                                     label-for="input-1"
                                     :invalid-feedback="invalidFeedback"
                                     :valid-feedback="validFeedback"
+                                    class="inputLabels"
                             >
                                 <b-input-group>
                                     <b-form-input
@@ -191,7 +198,7 @@
                         </b-col>
                     </b-form-row>
                 </div>
-                <b-form-group label="Scope:">
+                <b-form-group label="Scope:" class="inputLabels">
                     <b-form-checkbox-group
                             id="checkbox-group-1"
                             v-model="form.scope"
@@ -206,6 +213,7 @@
                         label-for="input-1"
                         :invalid-feedback="invalidFeedback"
                         :valid-feedback="validFeedback"
+                        class="inputLabels"
                 >
                     <b-form-input
                             id="input-1"
@@ -221,6 +229,7 @@
                         label-for="input-1"
                         :invalid-feedback="invalidFeedback"
                         :valid-feedback="validFeedback"
+                        class="inputLabels"
                 >
                     <b-form-input
                             id="input-1"
@@ -236,6 +245,7 @@
                         label-for="input-1"
                         :invalid-feedback="invalidFeedback"
                         :valid-feedback="validFeedback"
+                        class="inputLabels"
                 >
                     <b-form-input
                             id="input-1"
@@ -244,7 +254,6 @@
                             trim>
                     </b-form-input>
                 </b-form-group>
-
                 <b-form-group
                         id="fieldset-1"
                         description="(At least 15 characters long) Provide description of the new tenant and any other comments here."
@@ -252,6 +261,7 @@
                         label-for="input-1"
                         :invalid-feedback="invalidFeedback"
                         :valid-feedback="validFeedback"
+                        class="inputLabels"
                 >
                     <b-form-textarea
                             rows="3"
@@ -262,7 +272,7 @@
                             trim>
                     </b-form-textarea>
                 </b-form-group>
-                <b-form-group label="Application Type">
+                <b-form-group label="Application Type" class="inputLabels">
                     <b-form-radio-group
                             id="radio-group-1"
                             v-model="form.application_type"
@@ -270,13 +280,19 @@
                             name="radio-options"
                     ></b-form-radio-group>
                 </b-form-group>
-
-
-                <b-button type="submit" variant="primary">Update</b-button>
-                <b-button type="submit" variant="">Discard</b-button>
-
-
-
+                <b-button 
+                    v-b-modal.modal-1
+                    :disabled="isUpdateDisable" 
+                    type="submit" 
+                    variant="primary" 
+                    class="btnUpdate">
+                <div>
+                    <b-modal id="modal-1" title="Info">
+                        <p class="my-4">Tenant is updated</p>
+                    </b-modal>
+                </div>
+                Update
+                </b-button>
             </b-form>
         </div>
     </div>
@@ -285,6 +301,8 @@
 <script>
     import {email, required, url, minLength} from "vuelidate/lib/validators";
     import urls from "./utils/urls";
+    import axios from 'axios';
+    import {CLIENT_ID, CLIENT_SECRET} from '../config/config';
 
     export default {
         computed: {
@@ -296,28 +314,41 @@
             },
             validFeedback() {
                 return ''
+            },
+            isUpdateDisable() {
+                if(!this.isUpdateClicked)
+                    return this.$v.form.$invalid
+                return this.isUpdateClicked;
+            }
+        },
+        props: {
+            tenantRequest: {
+                type: Object
             }
         },
         data() {
             return {
+                isUpdateClicked: false,
                 form: {
-                    request_id: "234234324",
-                    client_name: "Test Client",
-                    requester_email: "tmp@gmail.com",
-                    admin_username: "airavata_admin",
-                    admin_first_name: "Shivam",
-                    admin_last_name: "Rastogi",
-                    admin_email: "shivam@airavata.com",
-                    admin_password: "",
-                    primary_contact: "51651",
-                    secondary_contact: "5545",
-                    redirect_uris: ["http://tst.com"],
-                    scope: ["openid"],
-                    domain: "google.com",
-                    client_uri: "http://tst.com",
-                    logo_uri: "http://tst.com",
-                    application_type: "web",
-                    comment: "Testing the page"
+                    admin_email: '',
+                    admin_first_name: '',
+                    admin_last_name: '',
+                    admin_password: '',
+                    admin_username: '',
+                    application_type: '',
+                    client_id: '',
+                    client_name: '',
+                    client_uri: '',
+                    comment: '',
+                    domain: '',
+                    logo_uri: '',
+                    redirect_uris: '',
+                    requester_email: '',
+                    scope: '',
+                    tenant_id: '',
+                    tenant_status: '',
+                    primary_contact: '',
+                    secondary_contact: ''
                 },
                 scopeOptions: [
                     {text: "openId", value: "openid"},
@@ -352,13 +383,18 @@
                 primary_contact: {required},
                 secondary_contact: {},
                 scope: {required},
-                domain: {url},
+                domain: {required,
+                    validDomain(domain) {
+                        return (
+                            /^((?!-))(xn--)?[a-z0-9][a-z0-9-_]{0,61}[a-z0-9]{0,}\.?((xn--)?([a-z0-9\-.]{1,61}|[a-z0-9-]{1,30})\.?[a-z]{2,})$/.test(domain)
+                        )
+                    }},
                 client_uri: {required},
-                logo_uri: {url},
+                logo_uri: {},
                 application_type: {required},
                 redirect_uris: {
                     $each: {
-                        required, url
+                        required
                     }
                 },
                 comment: {required, minLength: minLength(15)}
@@ -367,15 +403,102 @@
         methods: {
             onSubmit(event) {
                 event.preventDefault();
-                console.log(this.$v.form.client_name)
+                this.isUpdateClicked = true;
+                let encodedString = btoa(CLIENT_ID+":"+CLIENT_SECRET);
+                let redirectURI = [...this.$v.form.$model.redirect_uris]
+                let contacts = [];
+                let client_name = this.$v.form.$model.client_name;
+                
+                contacts.push(this.$v.form.$model.primary_contact)
+                if(this.$v.form.$model.secondary_contact)
+                    contacts.push(this.$v.form.$model.secondary_contact)
+                
+                axios.put(`https://custos.scigap.org/apiserver/tenant-management/v1.0.0/oauth2/tenant`,
+                {
+                    "admin_email": this.$v.form.$model.admin_email,
+                    "admin_first_name": this.$v.form.$model.admin_first_name,
+                    "admin_last_name": this.$v.form.$model.admin_last_name,
+                    "admin_password": this.$v.form.$model.admin_password,
+                    "admin_username": this.$v.form.$model.admin_username,
+                    "application_type": this.$v.form.$model.application_type,
+                    "client_id": this.$v.form.$model.client_id,
+                    "client_name": this.$v.form.$model.client_name,
+                    "client_uri": this.$v.form.$model.client_uri,
+                    "comment": this.$v.form.$model.comment,
+                    "contacts": [...contacts],
+                    "domain": this.$v.form.$model.domain,
+                    "logo_uri": this.$v.form.$model.logo_uri,
+                    "redirect_uris": [...this.$v.form.$model.redirect_uris],
+                    "requester_email": this.$v.form.$model.requester_email,
+                    "scope": this.$v.form.$model.scope
+                
+                }, {
+                    headers: {
+                        'Authorization': `Bearer ${encodedString}`
+                    }
+                })
+                .then(response => {
+                    console.log(response.data);
+                    if(response.status === 200)
+                    {
+                        window.location.href = `http://127.0.0.1:8000/admin/request/${this.$v.form.$model.client_id}/`
+                    }
+                })
             },
             addRedirectUri: function () {
                 this.form.redirect_uris.push("");
             },
             deleteRedirectUri: function (index) {
-                console.log(index);
                 this.form.redirect_uris.splice(index, 1);
             }
+        },
+        created() {
+            setTimeout(() => {
+                console.log(this.tenantRequest);
+                this.tenantRequest.primary_contact = this.tenantRequest.contacts[0];
+                this.tenantRequest.secondary_contact = this.tenantRequest.contacts[1];
+                this.form = Object.assign(this.form, {...this.tenantRequest});
+            }, 1000);
         }
     }
 </script>
+<style scoped>
+.btnUpdate {
+    color: white;
+    background-color: #ff6600;
+    padding: 10px 25px;
+    border: 1px solid #ff6600;
+    border-radius: 8px;
+}
+.btnUpdate:hover {
+        color: white;
+          background-color: #944203;
+          padding: 10px 25px;
+          border: 1px solid #944203;
+          border-radius: 8px;
+}
+.btnUpdate:focus {
+        color: white;
+          background-color: #944203;
+          padding: 10px 25px;
+          border: 1px solid #944203;
+          border-radius: 8px;
+}
+.inputLabels {
+    color: black;
+    font-weight: bold;
+}
+.inputText {
+    width: 300px;
+    border: 1px solid black;
+    margin-bottom: 15px;
+}
+.heading {
+    font-size: 30px;
+    color: black;
+    font-weight: bold;
+}
+.card {
+    padding: 25px;
+}
+</style>
