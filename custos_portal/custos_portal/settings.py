@@ -20,9 +20,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '3=(o1!l-)1p#evd@aviv56^piimx)!p=^t=#5))yn547yr9f2&'
-
-# Custos server secret key
-CUSTOS_TOKEN = 'Y3VzdG9zLTZud29xb2RzdHBlNW12Y3EwOWxoLTEwMDAwMTAxOkdpS3JHR1ZMVzd6RG9QWnd6Z0NpRk03V1V6M1BoSXVtVG1GeEFrcjc='
                 
 
 # SECURITY WARNING: don't run with debug turned on in production!
