@@ -1,16 +1,66 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block content %}
+<style>
+    .btn {
+        color: white;
+        background-color: #ff6600;
+        padding: 10px 25px;
+        border: 1px solid #ff6600;
+        border-radius: 8px;
+    }
+    .btn:hover {
+        color: white;
+          background-color: #944203;
+          padding: 10px 25px;
+          border: 1px solid #944203;
+          border-radius: 8px;
+    }
+    .btn:focus {
+        color: white;
+          background-color: #944203;
+          padding: 10px 25px;
+          border: 1px solid #944203;
+          border-radius: 8px;
+    } 
+    .row {
+        display: flex;
+        background-color: "white";
+    }
+    .column1 {
+        flex: 1;
+        width: 500px;
+        margin: 100px;
+    }
+    .column2 {
+        flex: 1
+    }
+    .img {
+        height: 500px;
+        width: 550px;
+        padding: 20px;
+    }  
+</style>
+
 <div class="main-content-wrapper">
 <main class="main-content">
 <div class="container">
-<div class="jumbotron">
-        <h1>Welcome!</h1>
-        <p>This is the Django based web portal for Custos.</p>
-    {% if not user.is_authenticated %}
-        <p><a class="btn btn-primary btn-lg" href="{% url 'custos_portal_auth:login' %}" role="button">Login »</a></p>
-        <p><a class="btn btn-primary btn-lg" href="{% url 'custos_portal_auth:create_account' %}" role="button">Register</a></p>
-    {% endif %}
+<div class="card">
+    <div class="row">
+        <div class="column1">
+            <h1>Welcome!</h1>
+            <p>This is the Django based web portal for Custos.</p>
+        {% if not user.is_authenticated %}
+            <p><a class="btn btn-primary btn-lg" href="{% url 'custos_portal_auth:login' %}" role="button">Login »</a></p>
+            <p><a class="btn btn-primary btn-lg" href="{% url 'custos_portal_auth:create_account' %}" role="button">Register</a></p>
+        {% endif %}
+        </div>
+        <div class="column2">
+            {% if not user.is_authenticated %}
+            <img class="img" src="{% static 'images/home.PNG' %}" />
+            {% endif %}
+        </div>
+    </div>
 </div>
 {% if user.is_authenticated %}
     <div class="row">

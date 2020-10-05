@@ -2,7 +2,7 @@
     <div>
         <div class="row">
             <div class="col">
-                <h1 class="h4 mb-4">Tenant Request Details</h1>
+                <h1 class="h4 mb-4 heading">Tenant Request Details</h1>
             </div>
         </div>
         <div class="row">
@@ -12,57 +12,72 @@
                         <table class="table">
                             <tbody>
                             <tr>
-                                <th scope="row">Request Id</th>
+                                <th scope="row">Client ID</th>
                                 <td>
-                                    <div> {{tenantRequestId}}</div>
+                                    <div> {{tenantRequest.client_id}}</div>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row">Client Name</th>
                                 <td>
-                                    <div> {{request.client_name}}</div>
+                                    <div> {{tenantRequest.client_name}}</div>
                                 </td>
                             </tr>
                             <tr>
+                                <th scope="row">Issued At</th>
+                                <td>{{tenantRequest.client_id_issued_at}}</td>
+                            </tr>
+                            <tr>
                                 <th scope="row">Requester Email</th>
-                                <td>{{request.requester_email}}</td>
+                                <td>{{tenantRequest.requester_email}}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Admin Username</th>
-                                <td>{{request.admin_username}}</td>
+                                <td>{{tenantRequest.admin_username}}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Admin Name</th>
-                                <td>{{request.admin_first_name}} {{ " " }} {{request.admin_last_name}}</td>
+                                <td>{{tenantRequest.admin_first_name}} {{ " " }} {{tenantRequest.admin_last_name}}</td>
                             </tr>
                             <tr>
-                                <th scope="row">Primary contact</th>
-                                <td>{{request.primary_contact}}</td>
+                                <th scope="row">Primary Contact</th>
+                                <td>{{tenantRequest.contacts[0]}}</td>
                             </tr>
                             <tr>
-                                <th scope="row">Secondary contact</th>
-                                <td>{{request.secondary_contact}}</td>
+                                <th scope="row">Secondary Contact</th>
+                                <td>{{tenantRequest.contacts[1]}}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Redirect URI Name</th>
-                                <td>{{request.redirect_uris}}</td>
+                                <td>
+                                    <table>
+                                        <tr v-for="uri in tenantRequest.redirect_uris" :key="uri">
+                                            {{uri}}
+                                        </tr>
+                                    </table>
+                                </td>
                             </tr>
                             <tr>
                                 <th scope="row">Scope</th>
-                                <td>{{request.scope}}</td>
+                                <td>{{tenantRequest.scope}}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Domain</th>
-                                <td>{{request.domain}}</td>
+                                <td>{{tenantRequest.domain}}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Client URI</th>
-                                <td>{{request.client_uri}}</td>
+                                <td>{{tenantRequest.client_uri}}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Logo URI</th>
+                                <td>{{tenantRequest.logo_uri}}</td>
                             </tr>
                             <tr>
                                 <th scope="row">Comment</th>
-                                <td>{{request.comment}}</td>
+                                <td>{{tenantRequest.comment}}</td>
                             </tr>
+                            <br/>
                             <div class="row">
                                 <div
                                         id="col-exp-buttons"
@@ -71,6 +86,8 @@
                                     <b-button
                                             v-b-modal.modal-1
                                             variant="success"
+                                            @click="approveHandler"
+                                            :disabled="this.isApproved()"
                                     >
                                         <div>
                                             <b-modal id="modal-1" title="Info">
@@ -82,12 +99,15 @@
                                     <b-button
                                             @click="editExperiment"
                                             variant="primary"
+                                            v-if="tenantRequest.client_id != this.custos_id"
                                     >
                                         Edit
                                     </b-button>
                                     <b-button
                                             v-b-modal.modal-2
                                             variant="danger"
+                                            @click="rejectTenant"
+                                            :disabled="this.isRejected()"
                                     >
                                         Reject
                                         <div>
@@ -98,8 +118,6 @@
                                     </b-button>
                                 </div>
                             </div>
-
-
                             </tbody>
                         </table>
                     </div>
@@ -111,40 +129,81 @@
 
 <script>
     import urls from "./utils/urls";
+    import axios from 'axios';
+    import {CLIENT_ID} from '../config/config';
 
     export default {
         props: {
-            tenantRequestId: {
-                required: true
+            tenantRequest: {
+                type: Object
+            },
+            tokenData: {
+                type: String
             }
         },
-        data() {
-            return {
-                request: {
-                    request_id: "xder3545d",
-                    client_name: "Test Client",
-                    requester_email: "tmp@gmail.com",
-                    admin_username: "airavata_admin",
-                    admin_first_name: "Shivam",
-                    admin_last_name: "Rastogi",
-                    admin_email: "shivam@airavata.com",
-                    primary_contact: "51651",
-                    secondary_contact: "5545",
-                    redirect_uris: ["http://tst.com"],
-                    scope: ["test"],
-                    domain: "google.com",
-                    client_uri: "http://tst.com",
-                    logo_uri: "http://tst.com",
-                    application_type: "web",
-                    comment: "Testing the page"
-                }
+        data(){
+            return{
+                isApprovedClicked : false,
+                isRejectClicked: false,
+                custos_id: CLIENT_ID
             }
         },
         methods: {
+            isApproved()
+            {
+                return this.isApprovedClicked;
+            },
+            isRejected()
+            {
+                return this.isRejectClicked;
+            },
             editExperiment(tenantRequest) {
-                console.log("Executed edit link");
-                return urls.navigateToAdminEditRequest(this.request)
+                return urls.navigateToAdminEditRequest(this.tenantRequest)
+            },
+            approveHandler() {
+                this.isApprovedClicked = true;
+                let token = this.tokenData;
+
+                axios.post('https://custos.scigap.org/apiserver/tenant-management/v1.0.0/status', {
+                    "client_id":this.tenantRequest.client_id,
+                    "status": "ACTIVE"
+                },
+                {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    if(response.status === 200)
+                        window.location.href = "http://127.0.0.1:8000/admin/list-requests"
+                })
+            },
+            rejectTenant() {
+                this.isRejectClicked = true;
+                let token = this.tokenData;
+
+                axios.post('https://custos.scigap.org/apiserver/tenant-management/v1.0.0/status', {
+                    "client_id":this.tenantRequest.client_id,
+                    "status": "DEACTIVATED"
+                },
+                {
+                    headers: {
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    if(response.status === 200)
+                        window.location.href = "http://127.0.0.1:8000/admin/list-requests"
+                })
             }
-        }
+        },
     }
 </script>
+
+<style scoped>
+.heading {
+    font-size: 30px;
+    color: black;
+    font-weight: bold;
+}
+</style>

@@ -551,7 +551,6 @@
                     let logo_uri = this.$v.form.logo_uri.$model;
                     let comment = this.$v.form.comment.$model;
                     let application_type = this.$v.form.application_type.$model;
-                    
                     let scopeString = '';
                     for(var i=0; i<scope.length; i++)
                     {
@@ -567,7 +566,7 @@
                     if(this.$v.form.parentID.$model !== '' && this.$v.form.parentSecret.$model !== '')
                     {
                         let encodedString = btoa(this.$v.form.parentID.$model+":"+this.$v.form.parentSecret.$model)
-                        
+
                         axios.post('https://custos.scigap.org/apiserver/tenant-management/v1.0.0/oauth2/tenant', 
                         {
                             "client_name": client_name,
@@ -711,7 +710,7 @@
 }
 .btnCustom:hover {
         color: white;
-          background-color: #944203;    
+          background-color: #944203;
           padding: 10px 25px;
           border: 1px solid #944203;
           border-radius: 8px;

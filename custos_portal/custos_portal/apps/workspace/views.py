@@ -10,23 +10,31 @@ def request_new_tenant(request):
     if request.method == 'POST':
         logger.debug("Form is posted")
     request.active_nav_item = 'request-new-tenant'
+    token = request.COOKIES['token']
 
     return render(request, 'workspace/request_new_tenant.html', {
         'bundle_name': 'request-new-tenant',
+        'data': token
     })
 
 
 def list_new_tenant_requests(request):
     request.active_nav_item = 'list-requests'
+    
     if request.user:
-        print("hell")
+            token = request.COOKIES['token']
+        
     return render(request, 'workspace/list_requests.html', {
         'bundle_name': 'list-requests',
+        'data': token
     })
 
 
-def view_tenant_request(request, tenant_request_id):
+def view_tenant_request(request, client_id):
+    token = request.COOKIES['token']
+
     return render(request, 'workspace/view_tenant_request.html', {
         'bundle_name': 'view-request',
-        'tenant_request_id': tenant_request_id
+        'tenant_client_id': client_id,
+        'data': token
     })

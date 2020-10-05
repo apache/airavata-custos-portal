@@ -13,7 +13,15 @@ class AdminConfig(CustosAppConfig):
     """
     nav = [
         {
-            'label': 'Application Catalog',
+            'label': 'Create new tenant request',
+            'icon': 'fa fa-plus-square',
+            'url': 'custos_portal_admin:request_new_tenant',
+            'active_prefixes': ['applications', 'request-new-tenant'],
+            'enabled': lambda req: (req.is_gateway_admin or
+                                    req.is_read_only_gateway_admin),
+        },
+        {
+            'label': 'List of all existing tenant requests',
             'icon': 'fa fa-list',
             'url': 'custos_portal_admin:list_requests',
             'active_prefixes': ['applications', 'list-requests'],

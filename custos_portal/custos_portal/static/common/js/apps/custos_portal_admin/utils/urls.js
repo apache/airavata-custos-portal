@@ -3,7 +3,7 @@ export default {
   viewAdminTenantRequest(tenantRequest) {
     return (
       "/admin/request/" +
-      encodeURIComponent(tenantRequest.requestId) +
+      encodeURIComponent(tenantRequest.client_id) +
       "/"
     );
   },
@@ -15,7 +15,7 @@ export default {
   adminEditTenantRequest(tenantRequest) {
     return (
       "/admin/edit-tenant-request/" +
-      encodeURIComponent(tenantRequest.request_id) +
+      encodeURIComponent(tenantRequest.client_id) +
       "/"
     );
   },

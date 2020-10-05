@@ -3,7 +3,7 @@ export default {
   viewTenantRequest(tenantRequest) {
     return (
       "/workspace/request/" +
-      encodeURIComponent(tenantRequest.requestId) +
+      encodeURIComponent(tenantRequest.client_id) +
       "/"
     );
   },

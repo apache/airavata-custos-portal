@@ -1,6 +1,7 @@
 import { entry } from "../../index";
 import RequestNewTenantContainer from "./RequestNewTenantContainer";
 import MainLayout from "../../components/MainLayout";
+import VueJwtDecode from 'vue-jwt-decode'
 
 // Expect a template with id "edit-experiment" and experiment-id data attribute
 //
@@ -10,16 +11,23 @@ entry(Vue => {
   new Vue({
     render(h) {
       return h(MainLayout, [
-        h(RequestNewTenantContainer)
+        h(RequestNewTenantContainer, {
+          props : {
+            requesterEmail : this.decodedEmail
+          }
+        })
       ]);
     },
     data() {
       return {
-        experimentId: null
+        experimentId: null,
+        decodedEmail: null
       };
     },
     beforeMount() {
-      console.log("Entry is executed")
+      let token = this.$el.dataset.token;
+      
+      this.decodedEmail = VueJwtDecode.decode(token).email;
     }
   }).$mount("#request-new-tenant");
 });

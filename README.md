@@ -13,12 +13,20 @@ python -m venv venv
 ```
 pip install -r requirements.txt
 ```
-3. Install custos client SDK in the virtual env (Follow instructions in "Install Custos Client SDK")     
-4. Run django server using manage.py file in custos_portal directory. 
+3. Install custos client SDK in the virtual env (Follow instructions in "Install Custos Client SDK")  
+4. Make migrations
+```
+python manage.py migrate
+```
+5. Run django server using manage.py file in custos_portal directory. 
 ```
 python manage.py runserver
 ```
-5. Run webpack development server from custos_portal/custos_portal/static/common using:
+7. Install all the npm dependencies
+```
+npm install
+```
+6. Run webpack development server from custos_portal/custos_portal/static/common using:
 ```
 npm run serve
 ```
