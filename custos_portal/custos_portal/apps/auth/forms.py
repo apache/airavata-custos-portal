@@ -201,7 +201,6 @@ class CreateAccountForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
-        print(cleaned_data)
         password = cleaned_data.get('password')
         password_again = cleaned_data.get('password_again')
 

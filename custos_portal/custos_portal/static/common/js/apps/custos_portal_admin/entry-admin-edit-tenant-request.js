@@ -28,26 +28,9 @@ entry(Vue => {
       };
     },
     beforeMount() {
-      // let token = this.$el.dataset.token;
       this.tenantRequestId = this.$el.dataset.tenantClientId;
 
-      // let decodedEmail = VueJwtDecode.decode(token).email;
       let encodedString = btoa(CLIENT_ID+":"+CLIENT_SECRET);
-      
-      // axios.get(`https://custos.scigap.org/apiserver/tenant-management/v1.0.0/tenants?offset=0&status=ACTIVE&requester_email=${decodedEmail}`, {
-      //           headers: {
-      //               'Authorization': `Bearer ${encodedString}`
-      //           }
-      // })
-      // .then(res => {
-      //   const {tenant} = res.data;
-
-      //   const tenantRequest = tenant.find(t => {
-      //     if(t.tenant_id == this.tenantRequestId)
-      //       return t;
-      //   })
-      //   this.tenantRequest = tenantRequest;
-      // })
 
       axios.get(`https://custos.scigap.org/apiserver/tenant-management/v1.0.0/oauth2/tenant?client_id=${this.tenantRequestId}`, {
               headers: {
@@ -55,7 +38,6 @@ entry(Vue => {
               }
       })
       .then(res => {
-        console.log(res.data);
         this.tenantRequest = res.data;
       })
     }

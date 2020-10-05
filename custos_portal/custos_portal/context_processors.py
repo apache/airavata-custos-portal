@@ -32,7 +32,6 @@ token = "Y3VzdG9zLTZud29xb2RzdHBlNW12Y3EwOWxoLTEwMDAwMTAxOkdpS3JHR1ZMVzd6RG9QWnd
 def register_user():
 
     response = client.register_user(token, "TestingUser", "Jhon", "Smith", "12345", "jhon@iu.edu", True)
-    print(response)
 
 
 def airavata_app_registry(request):

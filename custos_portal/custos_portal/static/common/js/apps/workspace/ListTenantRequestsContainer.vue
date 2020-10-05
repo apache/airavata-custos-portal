@@ -22,7 +22,7 @@
                             <tr>
                                 <th width="40%">Client ID</th>
                                 <th width="60%">Client Name</th>
-                                <!-- <th width="20%">Status</th> -->
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -31,7 +31,7 @@
                                         <b-link class="link" @click="viewLink(tR)">{{tR.client_id}}</b-link>
                                     </td>
                                     <td>{{tR.client_name}}</td>
-                                    <!-- <td>{{tR.tenant_status}}</td> -->
+                                    
                                 </tr>
                         </tbody>
                     </table>
@@ -64,14 +64,7 @@
                     <br/>
                     <div align="center">
                         <button type="button" class="btnPagination" v-if="requested_page != 1" @click="paginateRequested(--requested_page)"> << </button>
-                        <!-- <button 
-                            type="button" 
-                            class="btnPagination"
-                            :key="requested_pageNumber" 
-                            v-for="requested_pageNumber in requested_pages.slice(requested_page-1, requested_page+5)" 
-                            :class="[requested_page == requested_pageNumber ? 'btnPaginationActive' : 'btnPagination']"
-                            @click="paginateRequested(requested_pageNumber)"
-                        > -->
+                        
                         {{requested_pageNumber}}
                         </button>
                         <button type="button" class="btnPagination" v-if="requested_page < requested_pages.length" @click="paginateRequested(++requested_page)"> >> </button>
@@ -99,16 +92,7 @@
                     <br/>
                     <div align="center">
                         <button type="button" v-if="active_page != 1" class="btnPagination" @click="paginateActive(--active_page)"> << </button>
-                        <!-- <button 
-                            type="button" 
-                            class="btnPagination" 
-                            :key="active_pageNumber" 
-                            v-for="active_pageNumber in active_pages.slice(active_page-1, active_page+5)" 
-                            :class="[active_page === active_pageNumber ? 'btnPaginationActive' : 'btnPagination']"
-                            @click="paginateActive(active_pageNumber)"
-                        >
-                        {{active_pageNumber}}
-                        </button> -->
+                        
                         <button type="button" v-if="active_page < active_pages.length" class="btnPagination" @click="paginateActive(++active_page)"> >> </button>
                     </div>
                 </div>
@@ -135,14 +119,6 @@
                     <br/>
                     <div align="center">
                         <button type="button" class="btnPagination" @click="paginateDeactivated(--deactivated_page)" v-if="deactivated_page != 1"> << </button>
-                        <!-- <button 
-                            type="button" 
-                            class="btnPagination" 
-                            :key="deactivated_pageNumber" 
-                            v-for="deactivated_pageNumber in deactivated_pages.slice(deactivated_page-1, deactivated_page+5)" 
-                            :class="[deactivated_page === deactivated_pageNumber ? 'btnPaginationActive' : 'btnPagination']"
-                            @click="paginateDeactivated(deactivated_pageNumber)"
-                        > -->
                         {{deactivated_pageNumber}}
                         </button>
                         <button type="button" class="btnPagination" @click="paginateDeactivated(++deactivated_page)" v-if="deactivated_page < deactivated_pages.length"> >> </button>
@@ -209,8 +185,6 @@
             .then(response => {
                 const {tenant} = response.data;
 
-                console.log(tenant);
-
                 this.active = tenant.filter(t => {
                     if(t.tenant_status === 'ACTIVE')
                         return true;
@@ -239,7 +213,6 @@
         },
         methods: {
             viewLink(tenantRequest) {
-                console.log(tenantRequest);
                 return urls.navigateToViewRequest(tenantRequest)
             },
             onClickHandler(step) 

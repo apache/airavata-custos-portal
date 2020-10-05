@@ -438,7 +438,6 @@
                     }
                 })
                 .then(response => {
-                    console.log(response.data);
                     if(response.status === 200)
                     {
                         window.location.href = `http://127.0.0.1:8000/admin/request/${this.$v.form.$model.client_id}/`
@@ -454,7 +453,6 @@
         },
         created() {
             setTimeout(() => {
-                console.log(this.tenantRequest);
                 this.tenantRequest.primary_contact = this.tenantRequest.contacts[0];
                 this.tenantRequest.secondary_contact = this.tenantRequest.contacts[1];
                 this.form = Object.assign(this.form, {...this.tenantRequest});

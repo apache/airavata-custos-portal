@@ -30,17 +30,7 @@ def list_new_tenant_requests(request):
     })
 
 
-# def view_tenant_request(request, tenant_request_id):
-#     token = request.COOKIES['token']
-#     print("************",tenant_request_id)
-#     return render(request, 'workspace/view_tenant_request.html', {
-#         'bundle_name': 'view-request',
-#         'tenant_request_id': tenant_request_id,
-#         'data': token
-#     })
-
 def view_tenant_request(request, client_id):
-    print("workspace view Tenant request Id: {}".format(client_id))
     token = request.COOKIES['token']
 
     return render(request, 'workspace/view_tenant_request.html', {

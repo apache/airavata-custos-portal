@@ -551,8 +551,6 @@
                     let logo_uri = this.$v.form.logo_uri.$model;
                     let comment = this.$v.form.comment.$model;
                     let application_type = this.$v.form.application_type.$model;
-                    console.log(" A T"+application_type);
-                    console.log(" A T"+requester_email);
                     let scopeString = '';
                     for(var i=0; i<scope.length; i++)
                     {

@@ -161,7 +161,6 @@
             approveHandler() {
                 this.isApprovedClicked = true;
                 let token = this.tokenData;
-                console.log(this.tenantRequest.client_id);
 
                 axios.post('https://custos.scigap.org/apiserver/tenant-management/v1.0.0/status', {
                     "client_id":this.tenantRequest.client_id,

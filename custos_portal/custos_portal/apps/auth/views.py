@@ -32,25 +32,14 @@ logger = logging.getLogger(__name__)
 
 def callback(request):
     try:
-        print("***Request**", request)
         user = authenticate(request=request)
         logger.debug("Saving user to session: {}".format(user))
         login(request, user)
         sess = request.session
-        print(sess['ACCESS_TOKEN'])
         token = sess['ACCESS_TOKEN']
-        print("****User****",user)
         code = request.GET.get('code').strip()
         logger.info(code)
         redirect_uri = request.build_absolute_uri(reverse('custos_portal_auth:callback'))
-        print("*****redirect uri******",redirect_uri)
-#         response = identity_management_client.token(token="Y3VzdG9zLTZud29xb2RzdHBlNW12Y3EwOWxoLTEwMDAwMTAxOkdpS3JHR1ZMVzd6RG9QWnd6Z0NpRk03V1V6M1BoSXVtVG1GeEFrcjc=", redirect_uri="http://127.0.0.1:8000/auth/callback/"
-# , code=code,grant_type="authorization_code")
-#         print("*********response******", response)
-        print(token)
-        # return _handle_login_redirect(request)
-        # response = identity_management_client.authenticate(settings.CUSTOS_TOKEN, username, password)
-        # token = MessageToDict(response)["accessToken"]
         response = _handle_login_redirect(request)
         response.set_cookie('token', value=token, secure=False, httponly=True)
         return response
@@ -78,46 +67,6 @@ def callback_error(request, idp_alias):
         'options': options,
     })
 
-
-# def create_account(request):
-#     if request.method == 'POST':
-#         form = forms.CreateAccountForm(request.POST)
-#         if form.is_valid():
-#             try:
-#                 username = form.cleaned_data['username']
-#                 email = form.cleaned_data['email']
-#                 first_name = form.cleaned_data['first_name']
-#                 last_name = form.cleaned_data['last_name']
-#                 password = form.cleaned_data['password']
-#                 is_temp_password = False
-#                 result = user_management_client.register_user(settings.CUSTOS_TOKEN, username, first_name, last_name,
-#                                                               password, email, is_temp_password)
-#                 if result.is_registered:
-#                     logger.debug("User account successfully created for : {}".format(username))
-#                     _create_and_send_email_verification_link(request, username, email, first_name, last_name,
-#                                                              settings.LOGIN_URL)
-#                     messages.success(
-#                         request,
-#                         "Account request processed successfully. Before you "
-#                         "can login you need to confirm your email address. "
-#                         "We've sent you an email with a link that you should "
-#                         "click on to complete the account creation process.")
-#                 else:
-#                     form.add_error(None, ValidationError("Failed to register the user with IAM service"))
-#             except TypeError as e:
-#                 logger.exception(
-#                     "Failed to create account for user", exc_info=e)
-#                 form.add_error(None, ValidationError(e))
-#             return render(request, 'custos_portal_auth/create_account.html', {
-#                 'options': settings.AUTHENTICATION_OPTIONS,
-#                 'form': form
-#             })
-#     else:
-#         form = forms.CreateAccountForm()
-#     return render(request, 'custos_portal_auth/create_account.html', {
-#         'options': settings.AUTHENTICATION_OPTIONS,
-#         'form': form
-#     })
 
 def create_account(request):
     return render(request, 'custos_portal_auth/form_create_account.html', {

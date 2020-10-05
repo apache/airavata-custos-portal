@@ -533,7 +533,6 @@
             onSubmit(event) {
                 event.preventDefault();
                 this.isSubmitted = true;
-                console.log("value changed");
                 if(!this.$v.form.$invalid)
                 {
                     let requester_email = this.requesterEmail;
@@ -552,7 +551,6 @@
                     let logo_uri = this.$v.form.logo_uri.$model;
                     let comment = this.$v.form.comment.$model;
                     let application_type = this.$v.form.application_type.$model;
-                    console.log(application_type);
                     let scopeString = '';
                     for(var i=0; i<scope.length; i++)
                     {
@@ -568,7 +566,6 @@
                     if(this.$v.form.parentID.$model !== '' && this.$v.form.parentSecret.$model !== '')
                     {
                         let encodedString = btoa(this.$v.form.parentID.$model+":"+this.$v.form.parentSecret.$model)
-                        console.log(encodedString);
                         axios.post('https://custos.scigap.org/apiserver/tenant-management/v1.0.0/oauth2/tenant', 
                         {
                             "client_name": client_name,
@@ -593,7 +590,6 @@
                             }
                         })
                         .then(response => {
-                            console.log("Response "+response.data);
                             const { client_id, client_secret } = response.data;
                             this.clientID = client_id;
                             this.clientSecret = client_secret;
@@ -625,7 +621,6 @@
                             }
                         })
                         .then(response => {
-                            console.log("Response "+response);
                             const { client_id, client_secret } = response.data;
                             this.clientID = client_id;
                             this.clientSecret = client_secret;

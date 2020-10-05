@@ -22,7 +22,7 @@
                             <tr>
                                 <th width="40%">Client ID</th>
                                 <th width="60%">Client Name</th>
-                                <!-- <th width="20%">Status</th> -->
+                                
                             </tr>
                         </thead>
                         <tbody>
@@ -31,7 +31,7 @@
                                         <b-link class="link" @click="viewLink(tR)">{{tR.client_id}}</b-link>
                                     </td>
                                     <td>{{tR.client_name}}</td>
-                                    <!-- <td>{{tR.tenant_status}}</td> -->
+                                    
                                 </tr>
                         </tbody>
                     </table>
@@ -62,30 +62,10 @@
                         </tbody>
                     </table>
                     <br/>
-                    <!-- <div align="center">
-                        <button type="button" class="btnPagination" v-if="requested_page != 1" @click="paginateRequested(--requested_page)"> << </button>
-                        <button 
-                            type="button" 
-                            class="btnPagination"
-                            :key="requested_pageNumber" 
-                            v-for="requested_pageNumber in requested_pages.slice(requested_page-1, requested_page+5)" 
-                            :class="[requested_page == requested_pageNumber ? 'btnPaginationActive' : 'btnPagination']"
-                            @click="paginateRequested(requested_pageNumber)"
-                        >
-                        {{requested_pageNumber}}
-                        </button>
-                        <button type="button" class="btnPagination" v-if="requested_page < requested_pages.length" @click="paginateRequested(++requested_page)"> >> </button>
-                    </div> -->
+                    
                     <div align="center">
                         <button type="button" class="btnPagination" v-if="req_offset > 0" @click="loadPrevPageRequested(req_offset-10)"> << </button>
-                        <!-- <button 
-                            type="button" 
-                            class="btnPagination"
-                            :key="requested_pageNumber"
-                            @click="paginateRequested(requested_pageNumber)"
-                        >
-                        {{requested_pageNumber}}
-                        </button> -->
+                        
                         <button type="button" class="btnPagination" v-if="req_limit != 1" @click="loadNextPageRequested(req_offset+10)"> >> </button>
                     </div>
                 </div>
@@ -109,30 +89,10 @@
                         </tbody>
                     </table>
                     <br/>
-                    <!-- <div align="center">
-                        <button type="button" v-if="active_page != 1" class="btnPagination" @click="paginateActive(--active_page)"> << </button>
-                        <button 
-                            type="button" 
-                            class="btnPagination" 
-                            :key="active_pageNumber" 
-                            v-for="active_pageNumber in active_pages.slice(active_page-1, active_page+5)" 
-                            :class="[active_page === active_pageNumber ? 'btnPaginationActive' : 'btnPagination']"
-                            @click="paginateActive(active_pageNumber)"
-                        >
-                        {{active_pageNumber}}
-                        </button>
-                        <button type="button" v-if="active_page < active_pages.length" class="btnPagination" @click="paginateActive(++active_page)"> >> </button>
-                    </div> -->
+                    
                     <div align="center">
                         <button type="button" class="btnPagination" v-if="active_offset > 0" @click="loadPrevPageActive(active_offset-10)"> << </button>
-                        <!-- <button 
-                            type="button" 
-                            class="btnPagination"
-                            :key="requested_pageNumber"
-                            @click="paginateRequested(requested_pageNumber)"
-                        >
-                        {{requested_pageNumber}}
-                        </button> -->
+                        
                         <button type="button" class="btnPagination" v-if="active_limit != 1" @click="loadNextPageActive(active_offset+10)"> >> </button>
                     </div>
                 </div>
@@ -157,30 +117,10 @@
                         </tbody>
                     </table>
                     <br/>
-                    <!-- <div align="center">
-                        <button type="button" class="btnPagination" @click="paginateDeactivated(--deactivated_page)" v-if="deactivated_page != 1"> << </button>
-                        <button 
-                            type="button" 
-                            class="btnPagination" 
-                            :key="deactivated_pageNumber" 
-                            v-for="deactivated_pageNumber in deactivated_pages.slice(deactivated_page-1, deactivated_page+5)" 
-                            :class="[deactivated_page === deactivated_pageNumber ? 'btnPaginationActive' : 'btnPagination']"
-                            @click="paginateDeactivated(deactivated_pageNumber)"
-                        >
-                        {{deactivated_pageNumber}}
-                        </button>
-                        <button type="button" class="btnPagination" @click="paginateDeactivated(++deactivated_page)" v-if="deactivated_page < deactivated_pages.length"> >> </button>
-                    </div> -->
+                    
                     <div align="center">
                         <button type="button" class="btnPagination" v-if="deactivated_offset > 0" @click="loadPrevPageDeactive(deactivated_offset-10)"> << </button>
-                        <!-- <button 
-                            type="button" 
-                            class="btnPagination"
-                            :key="requested_pageNumber"
-                            @click="paginateRequested(requested_pageNumber)"
-                        >
-                        {{requested_pageNumber}}
-                        </button> -->
+                        
                         <button type="button" class="btnPagination" v-if="deactive_limit != 1" @click="loadNextPageDeactive(deactivated_offset+10)"> >> </button>
                     </div>
                 </div>
@@ -243,51 +183,14 @@
             let encodedString = btoa(CLIENT_ID+":"+CLIENT_SECRET);
             let decodedEmail = VueJwtDecode.decode(token).email;
 
-            // axios.get(`https://custos.scigap.org/apiserver/tenant-management/v1.0.0/tenants?offset=0&status=ACTIVE&requester_email=${decodedEmail}`, {
-            //     headers: {
-            //         'Authorization': `Bearer ${encodedString}`
-            //     }
-            // })
-            // .then(response => {
-            //     const {tenant} = response.data;
-
-            //     this.active = tenant.filter(t => {
-            //         if(t.tenant_status === 'ACTIVE')
-            //             return true;
-            //     })
-
-            //     this.requested = tenant.filter(t => {
-            //         if(t.tenant_status === 'REQUESTED')
-            //             return true;
-            //     })
-
-            //     this.deactivated = tenant.filter(t => {
-            //         if(t.tenant_status === 'DEACTIVATED')
-            //             return true;
-            //     })
-            // })
-            // .then(response1 => {
-            //     this.paginateRequested(1);
-            // })
-            // .then(response2 => {
-            //     this.paginateActive(1);
-            // })
-            // .then(response3 => {
-            //     this.paginateDeactivated(1);
-            // })
-
             axios.get(`https://custos.scigap.org/apiserver/tenant-management/v1.0.0/tenants?limit=10&offset=${this.req_offset}`, {
                 headers: {
                     'Authorization': `Bearer ${encodedString}`
                 }
             })
             .then(response => {
-                console.log("First page");
-                console.log(response.data);
                 const {tenant} = response.data;
                 this.requested_display = tenant;
-                // this.offset = offset;
-                console.log(this.deactivated_offset);
             })
 
             axios.get(`https://custos.scigap.org/apiserver/tenant-management/v1.0.0/tenants?limit=10&offset=${this.offset}&status=ACTIVE`, {
@@ -296,12 +199,8 @@
                 }
             })
             .then(response => {
-                console.log("First page");
-                console.log(response.data);
                 const {tenant} = response.data;
                 this.active_display = tenant;
-                // this.offset = offset;
-                console.log(this.active_offset);
             })
             
             axios.get(`https://custos.scigap.org/apiserver/tenant-management/v1.0.0/tenants?limit=10&offset=${this.offset}&status=DEACTIVATED`, {
@@ -310,17 +209,12 @@
                 }
             })
             .then(response => {
-                console.log("First page");
-                console.log(response.data);
                 const {tenant} = response.data;
                 this.deactivated_display = tenant;
-                // this.offset = offset;
-                console.log(this.active_offset);
             })
         },
         methods: {
             viewLink(tenantRequest) {
-                console.log(tenantRequest);
                 return urls.navigateToAdminViewRequest(tenantRequest)
             },
             onClickHandler(step) 
@@ -331,21 +225,6 @@
                 this.searchInd = true;
 
                 let encodedString = btoa(CLIENT_ID+":"+CLIENT_SECRET);
-                // let decodedEmail = VueJwtDecode.decode(this.tokenData).email;
-
-                // axios.get(`https://custos.scigap.org/apiserver/tenant-management/v1.0.0/tenants?offset=0&status=ACTIVE&requester_email=${decodedEmail}`, {
-                // headers: {
-                //     'Authorization': `Bearer ${encodedString}`
-                // }
-                // })
-                // .then(response => {
-                //     const {tenant} = response.data;
-                    
-                //     this.searchList = tenant.filter(t => {
-                //         if(t.client_id === this.searchID)
-                //             return true;
-                //     });
-                // })
 
                 axios.get(`https://custos.scigap.org/apiserver/tenant-management/v1.0.0/oauth2/tenant?client_id=${this.searchID}`, {
                         headers: {
@@ -353,7 +232,6 @@
                         }
                 })
                 .then(res => {
-                    console.log(res.data);
                     this.searchList.push(res.data);
                 })
             },
@@ -382,7 +260,6 @@
                 this.deactivated_display = this.deactivated.slice(from, to);
             },
             loadNextPageRequested(offset) {
-                console.log(offset);
                 let encodedString = btoa(CLIENT_ID+":"+CLIENT_SECRET);
                 axios.get(`https://custos.scigap.org/apiserver/tenant-management/v1.0.0/tenants?limit=10&offset=${offset}`, {
                     headers: {
@@ -390,15 +267,12 @@
                     }
                 })
                 .then(response => {
-                    console.log("Next page");
-                    console.log(response.data);
                     const {tenant} = response.data;
                     if(tenant.length > 0)
                     {
                         this.requested_page++;
                         this.requested_display = tenant;
                         this.req_offset = offset;
-                        console.log(this.offset);
                     }
                     else
                         this.req_limit = 1;
@@ -406,7 +280,6 @@
             },
             loadPrevPageRequested(offset)
             {
-                console.log(offset);
                 let encodedString = btoa(CLIENT_ID+":"+CLIENT_SECRET);
                 axios.get(`https://custos.scigap.org/apiserver/tenant-management/v1.0.0/tenants?limit=10&offset=${offset}`, {
                     headers: {
@@ -415,20 +288,16 @@
                 })
                 .then(response => {
                     this.req_limit = 0;
-                    console.log("Next page");
-                    console.log(response.data);
                     const {tenant} = response.data;
                     if(tenant.length > 0)
                     {
                         this.requested_page++;
                         this.requested_display = tenant;
                         this.req_offset = offset;
-                        console.log(this.offset);
                     }
                 })
             },
             loadNextPageActive(offset) {
-                console.log(offset);
                 let encodedString = btoa(CLIENT_ID+":"+CLIENT_SECRET);
                 axios.get(`https://custos.scigap.org/apiserver/tenant-management/v1.0.0/tenants?limit=10&offset=${offset}&status=ACTIVE`, {
                     headers: {
@@ -436,15 +305,12 @@
                     }
                 })
                 .then(response => {
-                    console.log("Next page");
-                    console.log(response.data);
                     const {tenant} = response.data;
                     if(tenant.length > 0)
                     {
                         this.active_page++;
                         this.active_display = tenant;
                         this.active_offset = offset;
-                        console.log(this.active_offset);
                     }
                     else
                         this.active_limit = 1;
@@ -452,7 +318,6 @@
             },
             loadPrevPageActive(offset)
             {
-                console.log(offset);
                 let encodedString = btoa(CLIENT_ID+":"+CLIENT_SECRET);
                 axios.get(`https://custos.scigap.org/apiserver/tenant-management/v1.0.0/tenants?limit=10&offset=${offset}&status=ACTIVE`, {
                     headers: {
@@ -461,20 +326,16 @@
                 })
                 .then(response => {
                     this.active_limit = 0;
-                    console.log("Next page");
-                    console.log(response.data);
                     const {tenant} = response.data;
                     if(tenant.length > 0)
                     {
                         this.active_page++;
                         this.active_display = tenant;
                         this.active_offset = offset;
-                        console.log(this.active_offset);
                     }
                 })
             },
             loadNextPageDeactive(offset) {
-                console.log(offset);
                 let encodedString = btoa(CLIENT_ID+":"+CLIENT_SECRET);
                 axios.get(`https://custos.scigap.org/apiserver/tenant-management/v1.0.0/tenants?limit=10&offset=${offset}&status=DEACTIVATED`, {
                     headers: {
@@ -482,15 +343,12 @@
                     }
                 })
                 .then(response => {
-                    console.log("Next page");
-                    console.log(response.data);
                     const {tenant} = response.data;
                     if(tenant.length > 0)
                     {
                         this.deactive_page++;
                         this.deactivated_display = tenant;
                         this.deactivated_offset = offset;
-                        console.log(this.deactivated_offset);
                     }
                     else
                         this.deactive_limit = 1;
@@ -498,7 +356,6 @@
             },
             loadPrevPageDeactive(offset)
             {
-                console.log(offset);
                 let encodedString = btoa(CLIENT_ID+":"+CLIENT_SECRET);
                 axios.get(`https://custos.scigap.org/apiserver/tenant-management/v1.0.0/tenants?limit=10&offset=${offset}&status=DEACTIVATED`, {
                     headers: {
@@ -507,15 +364,12 @@
                 })
                 .then(response => {
                     this.deactive_limit = 0;
-                    console.log("Next page");
-                    console.log(response.data);
                     const {tenant} = response.data;
                     if(tenant.length > 0)
                     {
                         this.deactive_page++;
                         this.deactivated_display = tenant;
                         this.deactivated_offset = offset;
-                        console.log(this.deactivated_offset);
                     }
                 })
             },
