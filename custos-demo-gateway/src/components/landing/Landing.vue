@@ -56,12 +56,13 @@
 </template>
 
 <script>
-
     import config from "@/config";
+    import {mapGetters} from "vuex";
     import store from "@/store";
 
     export default {
         name: 'Landing',
+        store: store,
         props: {
             msg: String,
             seen: Boolean,
@@ -71,32 +72,27 @@
             return {
                 username: "",
                 password: "",
-                custosId: null,
-                custosSec: null,
                 loginDisabled: false,
-                redirectURI: null,
                 loginError: false
             }
+        },
+        computed: {
+            ...mapGetters({
+              authenticated: 'identity/isAuthenticated'
+            })
         },
         methods: {
             async login() {
                 this.loginDisabled = true
                 if (this.username != null && this.username != '' && this.password != null && this.password != '') {
                     let params = {
-                        client_id: this.custosId, client_sec: this.custosSec, username: this.username,
-                        password: this.password, token_endpoint: this.tokenEndpoint
+                        client_id: config.value('clientId'),
+                        client_sec:  config.value('clientSec'),
+                        username: this.username,
+                        password: this.password,
+                        token_endpoint: "https://custos.scigap.org/apiserver/identity-management/v1.0.0/token"
                     };
-                    let data = {
-                        client_id: this.custosId,
-                        client_sec: this.custosSec
-                    }
-                    await this.$store.dispatch('identity/authenticateLocally', params)
-                    let resp = await this.$store.dispatch('identity/isAuthenticated', data)
-                    if (resp) {
-                        await this.$router.push('workspace')
-                    } else {
-                        this.loginError = true
-                    }
+                    await this.$store.dispatch('identity/authenticateLocally', params);
                 } else {
                     this.loginError = true
                 }
@@ -106,27 +102,25 @@
                 this.loginError = false
             },
             async loadAuthURL() {
-                let params = {client_id: this.custosId, redirect_uri: this.redirectURI};
+                let params = {client_id: this.custosId, redirect_uri: config.value('redirectURI')};
                 await this.$store.dispatch('identity/fetchAuthorizationEndpoint', params)
                 window.location.href = this.$store.getters['identity/getAuthorizationEndpoint']
             }
         },
-        async mounted() {
-            this.custosId = config.value('clientId')
-            this.custosSec = config.value('clientSec')
-            this.redirectURI = config.value('redirectURI')
-            this.tokenEndpoint = "https://custos.scigap.org/apiserver/identity-management/v1.0.0/token"
-            let data = {
-                client_id: this.custosId,
-                client_sec: this.custosSec
+        watch: {
+          authenticated() {
+            if (this.authenticated === true) {
+               this.$router.push('workspace')
             }
-            if (await store.dispatch('identity/isAuthenticated', data) === true) {
-                await this.$router.push('workspace')
-            }
+          }
+        },
+        mounted() {
+          if (this.authenticated === true) {
+            this.$router.push('workspace')
+          }
         }
     }
 </script>
-
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>

@@ -1,5 +1,5 @@
 <template>
-    <div v-if="showHeader()">
+    <div v-if="authenticated">
         <div class="header p-3">
             <div class="custos-logo">
                 <img src="../assets/custos-logo_custos-logo-color-v1.png" style="width: 140px;">
@@ -62,52 +62,43 @@
 
 <script>
     import config from "@/config";
+    import {mapGetters} from 'vuex';
+    import store from "../store"
 
     export default {
         name: "Header",
+        store: store,
         data: function () {
             return {
                 isAdmin: false,
-                user: null,
-                authenticated: false
+                user: null
             }
         },
+        computed: {
+          ...mapGetters({
+            authenticated: 'identity/isAuthenticated',
+            currentUserName: 'identity/getCurrentUserName',
+          })
+        },
         methods: {
-            showHeader() {
-                return this.authenticated
-            },
             async logout() {
                 await this.$store.dispatch('identity/logout', {
                     client_id: config.value('clientId'),
                     client_sec: config.value('clientSec'),
                 })
-
-                await this.$router.push("/")
-                await this.$store.dispatch('agent/reset')
-                await this.$store.dispatch('group/reset')
-                await this.$store.dispatch('secret/reset')
-                await this.$store.dispatch('sharing/reset')
-                await this.$store.dispatch('user/reset')
             },
             async validateAuthentication() {
-                this.authenticated = await this.$store.dispatch('identity/isAuthenticated', {
-                    client_id: config.value('clientId'),
-                    client_sec: config.value('clientSec')
-                }) === true
-
                 return this.authenticated
             },
             async fetchAuthenticatedUser() {
                 this.isAdmin = await this.$store.dispatch('identity/isLoggedUserHasAdminAccess')
-                let currentUserName = await this.$store.dispatch('identity/getCurrentUserName')
-
-                if (await this.validateAuthentication() && (!this.user || this.user.username !== currentUserName)) {
+                if (await this.validateAuthentication() && (!this.user || this.user.username !== this.currentUserName)) {
                     let resp = await this.$store.dispatch('user/users', {
                         offset: 0,
                         limit: 1,
                         client_id: config.value('clientId'),
                         client_sec: config.value('clientSec'),
-                        username: currentUserName
+                        username: this.currentUserName
                     })
                     if (Array.isArray(resp) && resp.length > 0) {
                         resp.forEach(obj => {
@@ -126,12 +117,18 @@
             }
         },
         watch: {
-            $route() {
-                this.authenticated = false
-                this.fetchAuthenticatedUser()
+          async authenticated() {
+            if (this.authenticated !== true) {
+               await this.$router.push('/')
             }
+          },
+          currentUserName() {
+            if (this.currentUserName) {
+               this.fetchAuthenticatedUser()
+            }
+          }
         },
-        async beforeMount() {
+        beforeMount() {
             this.fetchAuthenticatedUser()
         }
     }
