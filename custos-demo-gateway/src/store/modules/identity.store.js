@@ -22,15 +22,15 @@ const actions = {
 
     },
 
-    async authenticateUsingCode({commit}, data) {
-        let resp = await identity_management.getToken(data)
-        commit('SET_AUTH_TOKEN', resp.data)
+    async authenticateUsingCode({dispatch}, data) {
+        let resp = await identity_management.getToken(data);
+        dispatch("setAuthToken", resp.data);
     },
 
-    async authenticateLocally({commit}, data) {
+    async authenticateLocally({dispatch}, data) {
         try {
-            let resp = await identity_management.localLogin(data)
-            commit('SET_AUTH_TOKEN', resp.data)
+            let resp = await identity_management.localLogin(data);
+            dispatch("setAuthToken", resp.data);
         }catch (e) {
             return false
         }
@@ -46,19 +46,26 @@ const actions = {
         commit('CLEAR_AUTH_TOKEN', data)
     },
 
+    setAuthToken({commit}, data) {
+        commit('SET_AUTH_TOKEN', data)
+
+        let currentUserName = auth.getLoggedUsername();
+        commit('SET_CURRENT_USER_NAME', {currentUserName});
+    },
+
     // eslint-disable-next-line no-unused-vars
-    async isAuthenticated({commit}, data) {
+    async isAuthenticated({commit, getters, dispatch}, data) {
         try {
-            let resp = auth.isLoggedIn()
-            if (!resp) {
+            if (!getters.isAuthenticated) {
                 let dat = {
                     client_id: data.client_id,
                     client_sec: data.client_sec,
                     refresh_token: auth.getRefreshToken()
                 }
-                let response = await identity_management.getTokenUsingRefreshToken(dat)
-                commit('SET_AUTH_TOKEN', response.data)
-                return auth.isLoggedIn()
+                let response = await identity_management.getTokenUsingRefreshToken(dat).catch();
+                dispatch("setAuthToken", response.data);
+
+                return getters.isAuthenticated;
             }
             return true
         } catch (e) {
@@ -94,9 +101,13 @@ const mutations = {
         auth.setIdToken(data.id_token)
         auth.setAccessToken(data.access_token)
         auth.setRefreshToken(data.refresh_token)
-        state.token = data.id_token
+        state.idToken = data.id_token
         state.accessToken = data.access_token
         state.refreshToken = data.refresh_token
+    },
+
+    SET_CURRENT_USER_NAME(state, data) {
+        state.currentUserName = data.currentUserName
     },
 
     // eslint-disable-next-line no-unused-vars
@@ -107,6 +118,7 @@ const mutations = {
         state.idToken = ''
         state.accessToken = ''
         state.refreshToken = ''
+        state.currentUserName = null
     }
 }
 
@@ -114,15 +126,17 @@ const getters = {
     getAuthorizationEndpoint(state) {
         return state.authorizationEndpoint
     },
-    isAuthenticated() {
-        return auth.isLoggedIn()
+
+    isAuthenticated(state) {
+        return state.idToken && state.idToken !== "" && !auth.isTokenExpired(state.idToken);
     },
 
     getAccessToken(state) {
         return state.accessToken;
     },
-
-
+    getCurrentUserName(state){
+        return state.currentUserName;
+    }
 }
 
 export default {
