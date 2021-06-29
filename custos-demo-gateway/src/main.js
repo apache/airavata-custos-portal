@@ -1,7 +1,8 @@
 import Vue from 'vue';
+import Vuex from 'vuex';
 import App from './App.vue';
 import router from "./router.js";
-import store from './new-service/store';
+import store from './lib/store';
 import {BootstrapVue, IconsPlugin} from 'bootstrap-vue';
 import Vuelidate from 'vuelidate';
 import VueTypeaheadBootstrap from 'vue-typeahead-bootstrap';
@@ -9,6 +10,7 @@ import VueTypeaheadBootstrap from 'vue-typeahead-bootstrap';
 
 import './styles.scss';
 
+Vue.use(Vuex);
 Vue.use(BootstrapVue)
 Vue.use(Vuelidate)
 // Optionally install the BootstrapVue icon components plugin

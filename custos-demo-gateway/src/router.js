@@ -1,9 +1,8 @@
 import Vue from "vue";
 import Router from "vue-router";
-import Landing from "./components/landing/Landing.vue";
-import store from './new-service/store'
-import {custosService} from "@/new-service/store/util/custos.util";
-// import {custosService} from "@/new-service/store/util/custos.util";
+import Landing from "./lib/components/pages/Landing.vue";
+import store from './lib/store'
+import {custosService} from "./lib/store/util/custos.util";
 
 Vue.use(Router)
 
@@ -29,7 +28,7 @@ export default new Router({
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/admin-portal/ListTenants")
+                import(/*webpackChunkName:"account"*/  "./lib/components/pages/ListTenants")
         },
         {
             path: "/tenants/:clientId/child-tenants/new",
@@ -38,7 +37,7 @@ export default new Router({
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/admin-portal/NewTenant")
+                import(/*webpackChunkName:"account"*/  "./lib/components/pages/NewTenant")
         },
         {
             path: "/tenants/:clientId",
@@ -61,7 +60,7 @@ export default new Router({
 
             },
             // component: () =>
-            //     import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantHome")
+            //     import(/*webpackChunkName:"account"*/  "./lib/components/pages/TenantHome")
         },
         {
             path: "/tenants/:clientId/profile",
@@ -70,7 +69,7 @@ export default new Router({
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantProfile")
+                import(/*webpackChunkName:"account"*/  "./lib/components/pages/TenantProfile")
         },
         {
             path: "/tenants/:clientId/users",
@@ -79,7 +78,7 @@ export default new Router({
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantUsers")
+                import(/*webpackChunkName:"account"*/  "./lib/components/pages/TenantUsers")
         },
         {
             path: "/tenants/:clientId/users/:username",
@@ -88,7 +87,7 @@ export default new Router({
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantUser")
+                import(/*webpackChunkName:"account"*/  "./lib/components/pages/TenantUser")
         },
         {
             path: "/tenants/:clientId/groups",
@@ -97,7 +96,7 @@ export default new Router({
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantGroups")
+                import(/*webpackChunkName:"account"*/  "./lib/components/pages/TenantGroups")
         },
         {
             path: "/tenants/:clientId/groups/new",
@@ -106,7 +105,7 @@ export default new Router({
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantNewGroup")
+                import(/*webpackChunkName:"account"*/  "./lib/components/pages/TenantNewGroup")
         },
         {
             path: "/tenants/:clientId/groups/:groupId",
@@ -115,7 +114,7 @@ export default new Router({
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantGroup")
+                import(/*webpackChunkName:"account"*/  "./lib/components/pages/TenantGroup")
         },
         {
             path: "/tenants/:clientId/permission-types/new",
@@ -124,7 +123,7 @@ export default new Router({
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantNewPermissionType")
+                import(/*webpackChunkName:"account"*/  "./lib/components/pages/TenantNewPermissionType")
         },
         {
             path: "/tenants/:clientId/permission-types",
@@ -133,7 +132,7 @@ export default new Router({
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantPermissionTypes")
+                import(/*webpackChunkName:"account"*/  "./lib/components/pages/TenantPermissionTypes")
         },
         {
             path: "/tenants/:clientId/roles/new",
@@ -142,7 +141,7 @@ export default new Router({
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantNewRole")
+                import(/*webpackChunkName:"account"*/  "./lib/components/pages/TenantNewRole")
         },
         {
             path: "/tenants/:clientId/roles",
@@ -151,7 +150,7 @@ export default new Router({
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantRoles")
+                import(/*webpackChunkName:"account"*/  "./lib/components/pages/TenantRoles")
         },
         {
             path: "/tenants/:clientId/entity-types/new",
@@ -160,7 +159,7 @@ export default new Router({
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantNewEntityType")
+                import(/*webpackChunkName:"account"*/  "./lib/components/pages/TenantNewEntityType")
         },
         {
             path: "/tenants/:clientId/entity-types",
@@ -169,7 +168,7 @@ export default new Router({
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantEntityTypes")
+                import(/*webpackChunkName:"account"*/  "./lib/components/pages/TenantEntityTypes")
         },
         {
             path: "/tenants/:clientId/entities/new",
@@ -178,7 +177,7 @@ export default new Router({
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantNewEntity")
+                import(/*webpackChunkName:"account"*/  "./lib/components/pages/TenantNewEntity")
         },
         {
             path: "/tenants/:clientId/entities",
@@ -187,7 +186,7 @@ export default new Router({
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantEntities")
+                import(/*webpackChunkName:"account"*/  "./lib/components/pages/TenantEntities")
         },
         {
             path: "/tenants/:clientId/entities/:entityId",
@@ -196,19 +195,19 @@ export default new Router({
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },
             component: () =>
-                import(/*webpackChunkName:"account"*/  "./components/admin-portal/TenantEntity")
+                import(/*webpackChunkName:"account"*/  "./lib/components/pages/TenantEntity")
         },
         {
             path: "/callback",
             name: "callback",
             component: () =>
-                import(/*webpackChunkName:"users"*/  "./components/Callback")
+                import(/*webpackChunkName:"users"*/  "./lib/components/pages/Callback")
         },
         {
             path: "*",
             name: "notFound",
             component: () =>
-                import(/*webpackChunkName:"users"*/  "./components/404")
+                import(/*webpackChunkName:"users"*/  "./lib/components/pages/404")
         }
     ]
 })

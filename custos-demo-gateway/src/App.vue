@@ -9,9 +9,9 @@
 </template>
 
 <script>
-import Header from "@/components/Header";
-import store from "./new-service/store";
-import Footer from "@/components/Footer";
+import Header from "./lib/components/block/Header";
+import store from "./lib/store";
+import Footer from "./lib/components/block/Footer";
 
 export default {
   name: 'App',
