@@ -1,0 +1,59 @@
+{% load static %}
+
+<style>
+    .btn {
+        color: white;
+        background-color: #EA6A0A;
+        padding: 10px 25px;
+        border: 1px solid #EA6A0A;
+        border-radius: 8px;
+    }
+    .btn:hover {
+        color: white;
+          background-color: #944203;
+          padding: 10px 25px;
+          border: 1px solid #944203;
+          border-radius: 8px;
+      }
+    .btn:focus {
+        color: white;
+          background-color: #944203;
+          padding: 10px 25px;
+          border: 1px solid #944203;
+          border-radius: 8px;
+    }
+    .heading {
+        font-size: 24px;
+        color: black;
+        
+        margin-left: -15px;
+    }
+    .column {
+        float: left;
+        width: 50%;
+        padding: 10px;
+    }
+    .img {
+        width: 500px;
+        height: 400px;
+        padding: 10px;
+    }
+    .registeration {
+        padding:20px;
+    }
+</style>
+
+ <div class="registeration">
+    <h5 class="heading">{{ title|default:"Log in with your existing organizational login" }}</h5>
+    {% for external in options.external %}
+    <a
+    {% if next %}
+        href="{% url 'custos_portal_auth:redirect_login' external.idp_alias %}?next={{ next | urlencode }}"
+    {% else %}
+        href="{% url 'custos_portal_auth:redirect_login' external.idp_alias %}"
+    {% endif %}
+        class="btn btn-primary btn-block mt-3">
+            Sign in with {{ external.name }}
+    </a>
+    {% endfor %}
+</div>
