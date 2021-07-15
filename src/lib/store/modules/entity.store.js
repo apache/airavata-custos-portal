@@ -55,9 +55,9 @@ const actions = {
             ext: entity.ext
         });
     },
-    async createEntity(obj, {clientId, entityId, name, description, type, ownerId, fullText, binaryData}) {
+    async createEntity(obj, {clientId, entityId, parentId, name, description, type, ownerId, fullText, binaryData}) {
         return await custosService.entities.createEntity({
-            clientId, entityId, name, description, type, ownerId, fullText, binaryData
+            clientId, entityId, parentId, name, description, type, ownerId, fullText, binaryData
         });
     },
     async updateEntity(obj, {clientId, entityId, name, description, type, ownerId, fullText, binaryData}) {

@@ -175,7 +175,7 @@ export default new Router({
         },
         {
             path: "/tenants/:clientId/entities/new",
-            name: "tenants",
+            name: "create_entity",
             beforeEnter: async (to, from, next) => {
                 await _validateAuthenticationBeforeEnter(to, from, next)
             },

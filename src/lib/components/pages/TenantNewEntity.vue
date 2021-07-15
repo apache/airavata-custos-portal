@@ -1,11 +1,22 @@
 <template>
-  <TenantHome title="New Entity" :breadcrumb-links="breadcrumbLinks" :errors="errors">
+  <TenantHome :title="this.parentId?'New Child Entity':'New Entity'" :breadcrumb-links="breadcrumbLinks" :errors="errors">
     <template #header-right>
       <b-button variant="primary" v-on:click="create">Create</b-button>
     </template>
     <b-overlay :show="processing">
       <div class="p-2 text-center">
         <div class="w-100 text-left" style="max-width: 600px;display: inline-block;">
+          <div v-if="this.parentId" class="pt-3">
+            <label class="form-label" for="parentId"> Parent ID</label>
+            <b-form-input
+                :readonly="true"
+                v-model="parentId"
+                :state="this.parentId"
+                id="parentId"
+                trim
+                size="sm">
+            </b-form-input>
+          </div>
           <div class="pt-3">
             <label class="form-label" for="name">Entity Name</label>
             <b-form-input
@@ -98,6 +109,9 @@ export default {
       console.log("this.$route.params : ", this.$route.params);
       return this.$route.params.clientId;
     },
+    parentId(){
+      return this.$route.params.entityId;
+    },
     inputState() {
       return {
         name: this.name === null ? null : this.isValid.name,
@@ -146,6 +160,7 @@ export default {
           await this.$store.dispatch("entity/createEntity", {
             entityId: `${this.clientId}_${window.performance.now()}`,
             clientId: this.clientId,
+            parentId: this.parentId,
             name: this.name,
             description: this.description,
             type: this.entityTypeId,
